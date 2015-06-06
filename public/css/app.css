@@ -6255,4 +6255,5 @@ body {background:#efefef;}
 
 @media (max-width: 767px) {
   .podcast-item-row{text-align: center;}
+  .container-podcast-list {background: #fff;}
 }
