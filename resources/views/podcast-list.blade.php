@@ -21,10 +21,10 @@
               <div class="player-action-list">
                   <ul class="list-inline">
                     <li class='play' data-src='{{ $item->get_enclosure()->get_link() }}'>
-                      <button type="button" class="btn-sm btn-default">Play</button>
+                      <button type="button" class="btn-sm btn-primary">Play</button>
                     </li>
                     <li class="pause">
-                      <button type="button" class="btn-sm btn-default">Pause</button>
+                      <button type="button" class="btn-sm btn-primary">Pause</button>
                     </li>
                 </ul>
               </div>
