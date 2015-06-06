@@ -6,7 +6,7 @@
     <div class="col-md-6">
         @foreach ($items as $item)
           <div class="row podcast-item-row">
-            <div class="col-md-3">
+            <div class="col-md-3 podcast-thumbnail-container">
               <img class="podcast-thumbnail" width="75" height="75" src="{{$item->get_feed()->get_image_url()}}" />
               <p><small>{{ $item->get_date('jS F Y') }}</small></p>
             </div>
