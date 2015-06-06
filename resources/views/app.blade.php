@@ -22,7 +22,7 @@
 	    body {background:#efefef;}
 	    .main {padding-top: 2rem;}
 		#player-container {background: #b8354d;text-align: center;padding:0.75rem;}
-		#player{width:40%;}
+		#player{}
 		.navbar{margin-bottom: 0}
 		.item{background: #fff;margin: 0.75rem 0;border: 1px solid #ccc;}
 		.item:hover{background: #ededed;}
@@ -69,9 +69,13 @@
 	
 	@if(Auth::check())	
 	    <div id="player-container" class="container-fluid">
-			<audio id='player' controls preload="none">
-	          <source src="" type="audio/mpeg">
-	      </audio>
+	    	<div class="col-md-3"></div>
+	    	<div class="col-md-6">
+	    		<audio id='player' controls preload="none">
+		          <source src="" type="audio/mpeg">
+		        </audio>
+	    	</div>
+	    	<div class="col-md-3"></div>			
 		</div>
 	@endif
 
