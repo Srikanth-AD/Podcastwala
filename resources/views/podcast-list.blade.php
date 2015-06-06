@@ -6,11 +6,11 @@
     <div class="col-md-6">
         @foreach ($items as $item)
           <div class="row podcast-item-row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <img class="podcast-thumbnail" width="75" height="75" src="{{$item->get_feed()->get_image_url()}}" />
               <p><small>{{ $item->get_date('jS F Y') }}</small></p>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
               <h4 class="podcast-title"><small>{{$item->get_feed()->get_title()}}</small></h4>
               <h3 class="podcast-item-title"> 
                 <a target="_blank" href="{{ $item->get_permalink() }}">{{ $item->get_title() }}</a>            
@@ -18,16 +18,16 @@
               <p>{{str_limit($item->get_description(),100)}} 
                   <a class="read-more" target="_blank" href="{{ $item->get_permalink() }}"><small>Read More</small></a>
               </p>
-            </div>
-            <div class="col-md-2 player-action-list">
-              <ul class="list-unstyled">
-                <li class='play' data-src='{{ $item->get_enclosure()->get_link() }}'>
-                  <button type="button" class="btn btn-default">Play</button>
-                </li>
-                <li class="pause">
-                  <button type="button" class="btn btn-default">Pause</button>
-                </li>
-              </ul>
+              <div class="player-action-list">
+                  <ul class="list-inline">
+                    <li class='play' data-src='{{ $item->get_enclosure()->get_link() }}'>
+                      <button type="button" class="btn-sm btn-default">Play</button>
+                    </li>
+                    <li class="pause">
+                      <button type="button" class="btn-sm btn-default">Pause</button>
+                    </li>
+                </ul>
+              </div>
             </div>
           </div>
       @endforeach
