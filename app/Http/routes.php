@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', 'PodcastController@index');
 
 Route::get('home', 'HomeController@index');
-Route::get('demo', 'HomeController@demo');
+Route::get('podcast', 'PodcastController@index');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
