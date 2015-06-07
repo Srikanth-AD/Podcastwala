@@ -8,14 +8,15 @@
           <div class="row podcast-item-row">
             <div class="col-md-3 podcast-thumbnail-container">
               <img class="podcast-thumbnail" width="75" height="75" src="{{$item->get_feed()->get_image_url()}}" />
-              <p><small>{{ $item->get_date('jS F Y') }}</small></p>
+              <p><small>{{ $item->get_date('jS M Y') }}</small></p>
             </div>
             <div class="col-md-9">
               <h4 class="podcast-title"><small>{{$item->get_feed()->get_title()}}</small></h4>
               <h3 class="podcast-item-title"> 
                 <a target="_blank" href="{{ $item->get_permalink() }}">{{ $item->get_title() }}</a>            
               </h3>
-              <p class="podcast-item-description">{{str_limit($item->get_description(),100)}} 
+              <p class="podcast-item-description">{{strip_tags(str_limit($item->get_description(),100))}} 
+                  <br/>
                   <a class="read-more" target="_blank" href="{{ $item->get_permalink() }}"><small>Read More</small></a>
               </p>
               <div class="player-action-list">
