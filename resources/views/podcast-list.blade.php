@@ -15,7 +15,7 @@
               <h3 class="podcast-item-title"> 
                 <a target="_blank" href="{{ $item->get_permalink() }}">{{ $item->get_title() }}</a>            
               </h3>
-              <p>{{str_limit($item->get_description(),100)}} 
+              <p class="podcast-item-description">{{str_limit($item->get_description(),100)}} 
                   <a class="read-more" target="_blank" href="{{ $item->get_permalink() }}"><small>Read More</small></a>
               </p>
               <div class="player-action-list">
