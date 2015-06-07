@@ -67,21 +67,33 @@ class PodcastController extends Controller {
         	$feed->handle_content_type();
         	$podcastName = $feed->get_title();
 
-        	if($podcastName && $podcastName != '')
-        	{
-        		Podcast::create([
-                'name' => $podcastName ? $podcastName : '',
-				'machine_name' => strtolower(preg_replace('/\s+/', '', $podcastName)),
-                'feed_url' => Request::get('feed_url')
-            	]);
-            	// @todo Podcast was added
-            	return redirect('podcast/player');
-        	} 
+			if($podcastName && $podcastName != '')
+        	{        		
+        		// check if the feed's first item has an audio file in its enclosure
+	        	if(strpos($feed->get_items()[0]->get_enclosure()->get_type(),'audio') !== false)
+	        	{
+	        		Podcast::create([
+	                'name' => $podcastName ? $podcastName : '',
+					'machine_name' => strtolower(preg_replace('/\s+/', '', $podcastName)),
+	                'feed_url' => Request::get('feed_url')
+	            	]);
+	            	// @todo Podcast was added
+	            	return redirect('podcast/player');
+            	}
+            	else {
+	        		// @todo flash msg
+	        		return 'This doesn\'t seem to be an RSS feed with audio files. Please try another feed.'; 
+	        	}
+        	}
         	else 
         	{
         		// @todo Could not add podcast
         		return 'Sorry, this feed cannot be imported. Please try another feed';
-        	}
+        	}       	
+        }
+        else {
+        	// @todo use validation
+        	return 'Invalid feed URL given.';
         }
 	}
 
@@ -90,14 +102,18 @@ class PodcastController extends Controller {
 	 */
 	public function delete()
 	{
+		$result = ['status' => 0, 'message' => 'Something went wrong'];
+
 		if(Request::get('feedMachineName'))
         {
-        	$podcastId = DB::table('podcasts')->select('id','machine_name')->where('machine_name','=', 'shoptalk')->first()->id;
+        	$podcastId = DB::table('podcasts')->select('id','machine_name')->where('machine_name','=', Request::get('feedMachineName'))->first()->id;
         	if($podcastId)
         	{
         		$podcast = Podcast::find($podcastId);
         		$podcast->delete();
         		// @todo success
+        		$result['status'] = 1;
+        		$result['message'] = 'Podcast was deleted';
         	} 
         	else 
         	{
@@ -107,6 +123,7 @@ class PodcastController extends Controller {
         else {
         	// @todo invalid feed machine name given
         }
+        return $result;
 	}
 
 }

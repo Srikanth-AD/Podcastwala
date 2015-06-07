@@ -54,7 +54,10 @@
                         '_token': "{{ csrf_token() }}"
                     },
                     success: function(result) {
-                        window.reload(); // @todo add a response msg                    
+                        if(result.status === 1)
+                        {
+                            location.reload(); // @todo add a response msg
+                        }             
                     }
                 });
             }
