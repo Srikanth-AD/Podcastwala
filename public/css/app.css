@@ -6235,6 +6235,8 @@ label,
 /* Podcast app CSS */
 body {background:#efefef;}
 .main {padding-top: 2rem;}
+.container-podcast-manage,
+.container-podcast-settings{padding-top: 5rem;}
 .container-podcast-list {background:#242020;padding-top: 11rem;}
 #player-container { background: #B8354D;text-align: center;padding: 0.75rem;position: fixed;top: 5.1rem;width: 100%;z-index: 2;}
 #player{width:100%;}
@@ -6253,7 +6255,7 @@ body {background:#efefef;}
 .podcast-item-row.active {background: #fff;color:#000;}
 .podcast-item-row.active .btn-sm {border:1px solid #333;}
 .now-playing .podcast-item-title{color:#efefef;}
-
+.text-white{color:white;}
 @media (max-width: 767px) {
   .podcast-item-row{text-align: center;}
   .podcast-item-description{display: none;}

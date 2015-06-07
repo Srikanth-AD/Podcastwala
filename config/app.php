@@ -146,6 +146,8 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'willvincent\Feeds\FeedsServiceProvider',
 		'Barryvdh\Debugbar\ServiceProvider',
+		'Illuminate\View\ViewServiceProvider',
+        'Illuminate\Html\HtmlServiceProvider',
 
 	],
 
@@ -194,8 +196,10 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-		'Feeds'    => 'willvincent\Feeds\Facades\Feeds',
+		'Feeds'    => 'willvincent\Feeds\Facades\FeedsFacade',
 		'Debugbar' => 'Barryvdh\Debugbar\Facade',
+		'Form'      => 'Illuminate\Html\FormFacade',
+        'Html'      => 'Illuminate\Html\HtmlFacade'
 
 	],
 

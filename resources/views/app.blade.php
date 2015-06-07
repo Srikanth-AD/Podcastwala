@@ -33,7 +33,9 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/') }}">Home</a></li>
+					<li><a href="{{ url('/podcast/manage') }}">Manage Feeds</a></li>
+					<li><a href="{{ url('/podcast/settings') }}">Settings</a></li>
+					<li><a href="{{ url('/podcast/player') }}">Player</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -52,21 +54,6 @@
 			</div>
 		</div>
 	</nav>
-	
-	@if(Auth::check())	
-	    <div id="player-container" class="container-fluid">
-	    	<div class="col-md-3"></div>
-	    	<div class="col-md-6">
-	    		<div class="now-playing">
-	    			<h4 class="podcast-item-title"></h4>
-	    		</div>
-	    		<audio id='player' controls preload="none">
-		          <source src="" type="audio/mpeg">
-		        </audio>
-	    	</div>
-	    	<div class="col-md-3"></div>			
-		</div>
-	@endif
 
 	@yield('content')
 
