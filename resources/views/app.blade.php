@@ -33,9 +33,11 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/podcast/manage') }}">Manage Feeds</a></li>
-					<li><a href="{{ url('/podcast/settings') }}">Settings</a></li>
-					<li><a href="{{ url('/podcast/player') }}">Player</a></li>
+					@if (Auth::check())
+						<li><a href="{{ url('/podcast/manage') }}">Manage Feeds</a></li>
+						<li><a href="{{ url('/podcast/settings') }}">Settings</a></li>
+						<li><a href="{{ url('/podcast/player') }}">Player</a></li>
+					@endif
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
