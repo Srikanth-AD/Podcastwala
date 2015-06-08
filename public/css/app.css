@@ -6243,6 +6243,14 @@ body {background:#efefef;}
 .navbar{margin-bottom: 0}
 .main a{color:#B8354D}
 .main a:hover{text-decoration:none;cursor:pointer;color:#E55771;}
+.pagination > li > a,
+.pagination > li > span {color:#B8354D;background:#222;border:1px solid #555;}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus{ background-color: transparent;border:1px solid #555;}
 .play:hover{cursor: pointer;}
 .play img:hover{cursor: pointer;border:1px solid #a0a0a0;}
 .player-action-list{text-align: right;}
@@ -6256,6 +6264,7 @@ body {background:#efefef;}
 .podcast-item-row.active .btn-sm {border:1px solid #333;}
 .now-playing .podcast-item-title{color:#efefef;}
 .text-white{color:white;}
+
 @media (max-width: 767px) {
   .podcast-item-row{text-align: center;}
   .podcast-item-description{display: none;}

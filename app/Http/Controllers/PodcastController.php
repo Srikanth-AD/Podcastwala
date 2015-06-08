@@ -28,7 +28,7 @@ class PodcastController extends Controller {
 	{
 		$items = DB::table('items')
 				->where('user_id', '=', Auth::user()->id)
-				->orderBy('published_at','desc')->get();
+				->orderBy('published_at','desc')->paginate(15);
 
 		$podcasts = DB::table('podcasts')
 					->where('user_id', '=', Auth::user()->id)

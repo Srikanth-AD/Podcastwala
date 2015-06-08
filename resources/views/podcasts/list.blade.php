@@ -50,9 +50,18 @@
               </div>
             </div>
         @endforeach
+
+        @if($items)
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <?php echo $items->render() ?>
+            </div>
+          </div>
+        @endif
+
         @else 
           <p class="text-white">Please <a href="{{ url('/podcast/manage') }}">add a feed</a> to view podcasts here...</p>
-        @endif
+      @endif
     </div>
     <div class="col-md-3">      
     </div>
