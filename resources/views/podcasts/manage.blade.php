@@ -5,7 +5,7 @@
     <div class="col-md-6">
         <h3>Manage Podcast Feeds</h3>
         <hr/>
-        @if(App\Podcast::all()->where('user_id','=',Auth::user()->id)->count() > 0)
+        @if(DB::table('podcasts')->where('user_id','=',Auth::user()->id)->count() > 0)
              <table class="table">
                 <thead>
                     <tr>
@@ -14,7 +14,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(App\Podcast::all()->where('user_id','=',Auth::user()->id) as $cast)
+                    @foreach(DB::table('podcasts')->where('user_id','=',Auth::user()->id)->get() as $cast)
                         <tr>
                             <td>{{ date('F d, Y', strtotime($cast->created_at)) }}</td>
                             <td>{{$cast->name}}</td>

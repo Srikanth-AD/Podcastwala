@@ -137,7 +137,11 @@ class PodcastController extends Controller {
 
 		if(Request::get('feedMachineName'))
         {
-        	$podcastId = DB::table('podcasts')->select('id','machine_name')->where('machine_name','=', Request::get('feedMachineName'))->first()->id;
+        	$podcastId = DB::table('podcasts')->select('id','machine_name')
+			        	->where('machine_name','=', Request::get('feedMachineName'))
+			        	->where('user_id','=',Auth::user()->id)
+			        	->first()->id;
+        	
         	if($podcastId)
         	{
         		$podcast = Podcast::find($podcastId);
