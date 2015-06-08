@@ -17,9 +17,15 @@ class CreatePodcastsTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->string('name');
-			$table->string('machine_name')->unique();
-			$table->string('feed_url')->unique();
-			$table->string('feed_thumbnail_location')->nullable()->unique();
+			$table->string('machine_name');
+			$table->string('feed_url');
+			$table->string('feed_thumbnail_location')->nullable();
+			$table->integer('user_id')->unsigned();
+			$table->foreign('user_id')
+				->references('id')
+				->on('users')
+				->onDelete('cascade');
+			$table->unique(['machine_name','user_id']);
 		});
 	}
 

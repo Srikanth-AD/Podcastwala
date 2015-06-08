@@ -148,6 +148,7 @@ return [
 		'Barryvdh\Debugbar\ServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
         'Illuminate\Html\HtmlServiceProvider',
+        'Intervention\Image\ImageServiceProvider',
 
 	],
 
@@ -199,7 +200,8 @@ return [
 		'Feeds'    => 'willvincent\Feeds\Facades\FeedsFacade',
 		'Debugbar' => 'Barryvdh\Debugbar\Facade',
 		'Form'      => 'Illuminate\Html\FormFacade',
-        'Html'      => 'Illuminate\Html\HtmlFacade'
+        'Html'      => 'Illuminate\Html\HtmlFacade',
+        'Image' => 'Intervention\Image\Facades\Image',
 
 	],
 

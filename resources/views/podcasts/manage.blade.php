@@ -9,8 +9,8 @@
              <table class="table">
                 <thead>
                     <tr>
-                        <th>Created on</th>
-                        <th>Name</th>
+                        <th>Added on</th>
+                        <th>Podcast Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,11 +25,11 @@
             </table>
         @endif
 
-        <h4>Add a feed</h4>
+        <h4>Add a podcast feed</h4>
         {!! Form::model($podcast = new \App\Podcast, ['method' =>'POST','action' => ['PodcastController@add']]) !!}
             <div class="form-group">
                 {!! Form::text('feed_url', null, 
-                ['class' => 'form-control','required','placeholder' => 'Enter Feed Url here: http://example.com/feed']) !!}
+                ['class' => 'form-control','required','placeholder' => 'Enter a Podcast Feed Url here: http://example.com/feed']) !!}
             </div>
             
             <div class="form-group">

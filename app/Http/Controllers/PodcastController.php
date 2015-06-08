@@ -2,7 +2,10 @@
 use Feeds;
 use DB;
 use Request;
+use Image;
+use Auth;
 use App\Podcast;
+use App\Item;
 use Illuminate\Support\Facades\Redirect;
 
 class PodcastController extends Controller {
@@ -23,15 +26,17 @@ class PodcastController extends Controller {
 	 */
 	public function index()
 	{
-		$feedUrls = DB::table('podcasts')->select('feed_url')->lists('feed_url');		
-		
-		$feed = Feeds::make($feedUrls);
-	    $feed->set_cache_duration(3600);
-	    $feed->set_item_limit(5);
+		$items = DB::table('items')
+				->where('user_id', '=', Auth::user()->id)
+				->orderBy('published_at','desc')->get();
+
+		$podcasts = DB::table('podcasts')
+					->where('user_id', '=', Auth::user()->id)
+					->get();
+
 	    $data = array(
-	      'title'     => $feed->get_title(),
-	      'permalink' => $feed->get_permalink(),
-	      'items'     => $feed->get_items(),
+	      'podcasts'  => $podcasts,
+	      'items'     => $items,
 	    );  
 
 	    return view('podcasts.list', $data);
@@ -72,15 +77,40 @@ class PodcastController extends Controller {
         		// check if the feed's first item has an audio file in its enclosure
 	        	if(strpos($feed->get_items()[0]->get_enclosure()->get_type(),'audio') !== false)
 	        	{
+	        		$podcastMachineName = strtolower(preg_replace('/\s+/', '', $podcastName));
+
+	        		// Save the feed thumbnail to file system and save file path to database
+	        		$img = Image::make($feed->get_image_url())->resize(75, 75);
+    				$img->save(public_path('images/' . $podcastMachineName . '.png'));
+
 	        		Podcast::create([
-	                'name' => $podcastName ? $podcastName : '',
-					'machine_name' => strtolower(preg_replace('/\s+/', '', $podcastName)),
-	                'feed_url' => Request::get('feed_url')
+		                'name' => $podcastName ? $podcastName : '',
+						'machine_name' => $podcastMachineName,
+		                'feed_url' => Request::get('feed_url'),
+		                'feed_thumbnail_location' => 'images/' . $podcastMachineName . '.png',
+		                'user_id' => Auth::user()->id
 	            	]);
+
+	            	foreach($feed->get_items() as $item)
+	            	{
+	            		Item::create([
+	            			'podcast_id' => DB::table('podcasts')
+	            							->select('id','machine_name')
+	            							->where('machine_name','=', $podcastMachineName)->first()->id,
+	            			'user_id' => Auth::user()->id,
+	            			'url' => $item->get_permalink(),
+	            			'audio_url' => $item->get_enclosure()->get_link(),
+	            			'title' => $item->get_title(),
+	            			'description' => strip_tags(str_limit($item->get_description(),100)),
+	            			'published_at' => $item->get_date('Y-m-d H:i:s')
+	            		]);
+	            	}
+
 	            	// @todo Podcast was added
 	            	return redirect('podcast/player');
             	}
-            	else {
+            	else 
+            	{
 	        		// @todo flash msg
 	        		return 'This doesn\'t seem to be an RSS feed with audio files. Please try another feed.'; 
 	        	}
@@ -91,7 +121,8 @@ class PodcastController extends Controller {
         		return 'Sorry, this feed cannot be imported. Please try another feed';
         	}       	
         }
-        else {
+        else 
+        {
         	// @todo use validation
         	return 'Invalid feed URL given.';
         }
@@ -117,7 +148,7 @@ class PodcastController extends Controller {
         	} 
         	else 
         	{
-        		// @todo db delete failed
+        		// @todo DB delete failed
         	}
         }
         else {

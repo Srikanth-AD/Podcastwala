@@ -24,21 +24,22 @@
           @foreach ($items as $item)
             <div class="row podcast-item-row">
               <div class="col-md-3 podcast-thumbnail-container">
-                <img class="podcast-thumbnail" width="75" height="75" src="{{$item->get_feed()->get_image_url()}}" />
-                <p><small>{{ $item->get_date('jS M Y') }}</small></p>
+                <img class="podcast-thumbnail" width="75" height="75" 
+                  src="{{asset(App\Item::find($item->id)->podcast->feed_thumbnail_location)}}" />
+                <p><small>{{ date_format(date_create($item->published_at),'jS M Y') }}</small></p>
               </div>
               <div class="col-md-9">
-                <h4 class="podcast-title"><small>{{$item->get_feed()->get_title()}}</small></h4>
+                <h4 class="podcast-title"><small>{{App\Item::find($item->id)->podcast->name}}</small></h4>
                 <h3 class="podcast-item-title"> 
-                  <a target="_blank" href="{{ $item->get_permalink() }}">{{ $item->get_title() }}</a>            
+                  <a target="_blank" href="{{ $item->url }}">{{ $item->title }}</a>            
                 </h3>
-                <p class="podcast-item-description">{{strip_tags(str_limit($item->get_description(),100))}} 
+                <p class="podcast-item-description">{{ $item->description}} 
                     <br/>
-                    <a class="read-more" target="_blank" href="{{ $item->get_permalink() }}"><small>Read More</small></a>
+                    <a class="read-more" target="_blank" href="{{ $item->url }}"><small>Read More</small></a>
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
-                      <li class='play' data-src='{{ $item->get_enclosure()->get_link() }}'>
+                      <li class='play' data-src='{{ $item->audio_url}}'>
                         <button type="button" class="btn-sm btn-primary">Play</button>
                       </li>
                       <li class="pause">
