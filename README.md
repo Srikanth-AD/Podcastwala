@@ -5,7 +5,7 @@ Your very own Podcast web app built with Laravel
 ![alt tag](https://raw.githubusercontent.com/modestkdr/Podcastwala/master/screenshots/prototype.png)
 
 ### Install Instructions
-To install Scrumwala you can clone the repository:
+To install Podcastwala you can clone the repository:
 
 ```
 $ git clone https://github.com/modestkdr/Podcastwala.git.
