@@ -36,7 +36,7 @@
 					@if (Auth::check())
 						<li><a href="{{ url('/podcast/manage') }}">Manage Feeds</a></li>
 						<li><a href="{{ url('/podcast/settings') }}">Settings</a></li>
-						<li><a href="{{ url('/podcast/player') }}">Player</a></li>
+						<li><a href="{{ url('/podcast/player') }}">Listen</a></li>
 					@endif
 				</ul>
 
