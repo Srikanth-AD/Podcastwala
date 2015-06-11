@@ -39,13 +39,16 @@
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
-                      <li class='play' data-src='{{ $item->audio_url}}'>
-                        <button type="button" class="btn-sm btn-primary">Play</button>
-                      </li>
-                      <li class="pause">
-                        <button type="button" class="btn-sm btn-primary">Pause</button>
-                      </li>
-                  </ul>
+                        <li class="mark-as-read" data-src="{{$item->id}}">
+                          <button type="button" class="btn-sm btn-primary">Mark as read</button>
+                        </li>
+                        <li class='play' data-src='{{ $item->audio_url}}'>
+                          <button type="button" class="btn-sm btn-primary">Play</button>
+                        </li>
+                        <li class="pause">
+                          <button type="button" class="btn-sm btn-primary">Pause</button>
+                        </li>
+                    </ul>
                 </div>
               </div>
             </div>
@@ -82,6 +85,28 @@
         $('#player').trigger('pause');
       });
     });
+
+    $('.mark-as-read').on('click', function() {
+            if (confirm('Are you sure you want to mark this as read?')) {
+                var itemId = $(this).attr('data-src');
+                var itemRow = $(".mark-as-read[data-src=" + itemId + "]").parents(".podcast-item-row");
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/item/mark-as-read",
+                    data: {
+                        'itemId': itemId,
+                        '_token': "{{ csrf_token() }}"
+                    },
+                    success: function(result) {
+                        if(result.status === 1)
+                        {
+                            $(itemRow).fadeOut(1000);
+                        }             
+                    }
+                });
+            }
+        });
     </script>
   @endsection
 @endsection

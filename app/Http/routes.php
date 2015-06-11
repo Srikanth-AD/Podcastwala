@@ -19,6 +19,9 @@ Route::get('podcast/settings', 'PodcastController@settings');
 Route::post('podcast/add', 'PodcastController@add');
 Route::post('podcast/delete', 'PodcastController@delete');
 
+
+Route::post('item/mark-as-read', 'ItemController@markAsRead');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

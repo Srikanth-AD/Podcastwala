@@ -21,13 +21,14 @@ class PodcastController extends Controller {
 	}
 
 	/**
-	 * Return the list of podcasts to the "podcast-list" view
+	 * Return the list of podcast items that are un-read
 	 * @return  view
 	 */
 	public function index()
 	{
 		$items = DB::table('items')
 				->where('user_id', '=', Auth::user()->id)
+				->where('is_mark_as_read', '!=', 1)
 				->orderBy('published_at','desc')->paginate(15);
 
 		$podcasts = DB::table('podcasts')
