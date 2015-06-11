@@ -18,6 +18,7 @@ Route::get('podcast/manage', 'PodcastController@manage');
 Route::get('podcast/settings', 'PodcastController@settings');
 Route::post('podcast/add', 'PodcastController@add');
 Route::post('podcast/delete', 'PodcastController@delete');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
