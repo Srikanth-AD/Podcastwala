@@ -89,7 +89,8 @@ class PodcastController extends Controller {
 						'machine_name' => $podcastMachineName,
 		                'feed_url' => Request::get('feed_url'),
 		                'feed_thumbnail_location' => 'images/' . $podcastMachineName . '.png',
-		                'user_id' => Auth::user()->id
+		                'user_id' => Auth::user()->id,
+		                'web_url' => $feed->get_link()
 	            	]);
 
 	            	foreach($feed->get_items() as $item)

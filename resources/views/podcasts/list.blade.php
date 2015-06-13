@@ -34,7 +34,7 @@
                   <a target="_blank" href="{{ $item->url }}">{{ $item->title }}</a>            
                 </h3>
                 <p class="podcast-item-description">{{ $item->description}} 
-                    <br/>
+                    &nbsp; 
                     <a class="read-more" target="_blank" href="{{ $item->url }}"><small>Read More</small></a>
                 </p>
                 <div class="player-action-list">

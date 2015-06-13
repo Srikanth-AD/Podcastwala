@@ -11,7 +11,7 @@
                     <div class="podcast-container">
                         <span class="podcast-added-on">Added on {{ date('F d, Y', strtotime($cast->created_at)) }}</span>
                         <h4 class="podcast-title">{{$cast->name}}</h4>
-                        <a target="_blank" href="{{$cast->feed_url}}">
+                        <a target="_blank" href="{{$cast->web_url}}">
                             <img class="podcast-thumbnail" width="100" height="100" 
                              src="{{asset($cast->feed_thumbnail_location)}}" />
                         </a>
