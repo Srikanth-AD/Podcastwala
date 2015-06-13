@@ -6268,7 +6268,7 @@ hr {border-top:1px solid #6C6C6C;}
 .podcast-title {margin-bottom: 0}
 .podcast-thumbnail-container {text-align: center;}
 .podcast-thumbnail {margin-top: 1.5rem;margin-bottom: 1rem;}
-.podcast-item-row {  background: rgba(21, 21, 21, 0.72);color: #FFF;margin:1.7rem 0;}
+.podcast-item-row {  background: rgba(21, 21, 21, 0.72);color: #FFF;margin:2.5rem 0;}
 .podcast-item-row:hover{}
 .podcast-item-row.active {background: rgba(255, 255, 255, 0.17);color:#000;}
 .podcast-item-row.active .btn-sm {border:1px solid #333;}
