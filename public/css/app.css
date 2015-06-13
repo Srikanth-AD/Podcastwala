@@ -6233,16 +6233,16 @@ label,
 }
 
 /* Podcast app CSS */
-body {background:#1C1C1E;}
+body {background:rgba(28,28, 30, 0.87);}
 .main {padding-top: 2rem;}
 hr {border-top:1px solid #6C6C6C;}
 .page-title,.section-title{color:rgba(159, 159, 159, 0.87);}
 .section-title{margin-top: 4rem;}
 .container-podcast-manage,
-.container-podcast-settings{padding-top: 5rem;}
-.container-podcast-manage{background: rgba(30, 30, 30, 0.81);color:#EFEFEF;}
+.container-podcast-settings,
+.container-podcast-list{padding-top: 5rem;}
+.container-podcast-manage{color:#EFEFEF;}
 .container-podcast-manage .podcast-title {font-size: 1.5rem;margin-top: 0.2rem;text-shadow:1px 1px 1px #000;}
-.container-podcast-list {background:#1C1C1E;padding-top: 5rem;}
 .container-podcast-manage .podcast-container {color:#ADADAD;text-align:center;background: rgba(21, 21, 21, 0.72);padding:0.2rem;margin-top:1rem;margin-bottom: 1rem;}
 .container-podcast-manage .podcast-added-on {font-size: 1.2rem;}
 #player-container {display: none;background: rgba(4, 3, 3, 0.62);text-align: center;padding: 1rem 0;position: fixed;bottom: 0;width:100%;z-index: 3;}

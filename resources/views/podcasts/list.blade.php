@@ -56,7 +56,7 @@
 
         @if($items)
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-9">
               <?php echo $items->render() ?>
             </div>
           </div>
