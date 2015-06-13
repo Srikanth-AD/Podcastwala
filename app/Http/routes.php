@@ -21,6 +21,7 @@ Route::post('podcast/delete', 'PodcastController@delete');
 
 
 Route::post('item/mark-as-read', 'ItemController@markAsRead');
+Route::post('item/mark-all-prev-read', 'ItemController@markAllPrevAsRead');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

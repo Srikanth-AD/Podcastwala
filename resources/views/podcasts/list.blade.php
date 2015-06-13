@@ -24,7 +24,7 @@
           @foreach ($items as $item)
             <div class="row podcast-item-row">
               <div class="col-md-3 podcast-thumbnail-container">
-                <img class="podcast-thumbnail" width="75" height="75" 
+                <img class="podcast-thumbnail" width="100" height="100" 
                   src="{{asset(App\Item::find($item->id)->podcast->feed_thumbnail_location)}}" />
                 <p><small>{{ date_format(date_create($item->published_at),'jS M Y') }}</small></p>
               </div>
@@ -39,14 +39,14 @@
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
+                        <li class="mark-all-prev-read" data-src="{{$item->id}}">
+                          <img width="24" height="24" alt="mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" /> Mark all previous as read
+                        </li>
                         <li class="mark-as-read" data-src="{{$item->id}}">
-                          <button type="button" class="btn-sm btn-primary">Mark as read</button>
+                            <img width="24" height="24" alt="mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> Mark as read
                         </li>
                         <li class='play' data-src='{{ $item->audio_url}}'>
-                          <button type="button" class="btn-sm btn-primary">Play</button>
-                        </li>
-                        <li class="pause">
-                          <button type="button" class="btn-sm btn-primary">Pause</button>
+                            <img width="24" height="24" alt="play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" /> Play
                         </li>
                     </ul>
                 </div>
@@ -73,6 +73,7 @@
     <script>
     jQuery(document).ready(function($) {
       $('.podcast-item-row .play').on('click', function() {
+        $('#player-container').css('display','block');
         $('#player source').attr('src', $(this).attr('data-src'));
         $('#player').trigger('load').trigger('play');
         $('#player-container .now-playing .podcast-item-title').text(
@@ -80,9 +81,6 @@
           $(this).parents('.podcast-item-row').find('.podcast-item-title > a').text());
         $('.podcast-item-row').removeClass('active');
         $(this).parents('.podcast-item-row').addClass('active');
-      });
-      $('.podcast-item-row .pause').on('click', function() {
-        $('#player').trigger('pause');
       });
     });
 
@@ -102,6 +100,35 @@
                         if(result.status === 1)
                         {
                             $(itemRow).fadeOut(1000);
+                        }             
+                    }
+                });
+            }
+        });
+
+    $('.mark-all-prev-read').on('click', function() {
+            if (confirm('Are you sure you want to mark all previous episodes in this podcast as read?')) {
+                var itemId = $(this).attr('data-src');
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: "/item/mark-all-prev-read",
+                    data: {
+                        'itemId': itemId,
+                        '_token': "{{ csrf_token() }}"
+                    },
+                    success: function(result) {
+                        if(result.status === 1)
+                        {
+                          for(var i = 0; i < result.data.length; i++)
+                          {
+                            if($(".mark-all-prev-read[data-src=" + result.data[i] + "]"))
+                            {
+                              $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
+                              .parents(".podcast-item-row")
+                              .fadeOut(1000);
+                            }                            
+                          }                         
                         }             
                     }
                 });

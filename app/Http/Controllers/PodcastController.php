@@ -81,7 +81,7 @@ class PodcastController extends Controller {
 	        		$podcastMachineName = strtolower(preg_replace('/\s+/', '', $podcastName));
 
 	        		// Save the feed thumbnail to file system and save file path to database
-	        		$img = Image::make($feed->get_image_url())->resize(75, 75);
+	        		$img = Image::make($feed->get_image_url())->resize(100, 100);
     				$img->save(public_path('images/' . $podcastMachineName . '.png'));
 
 	        		Podcast::create([
