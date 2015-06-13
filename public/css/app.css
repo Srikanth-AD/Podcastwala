@@ -6241,6 +6241,7 @@ hr {border-top:1px solid #6C6C6C;}
 .container-podcast-manage,
 .container-podcast-settings,
 .container-podcast-list{padding-top: 5rem;}
+.container-podcast-list .pagination {margin-bottom: 12rem;}
 .container-podcast-manage{color:#EFEFEF;}
 .container-podcast-manage .podcast-title {font-size: 1.5rem;margin-top: 0.2rem;text-shadow:1px 1px 1px #000;}
 .container-podcast-manage .podcast-container {color:#ADADAD;text-align:center;background: rgba(21, 21, 21, 0.72);padding:0.2rem;margin-top:1rem;margin-bottom: 1rem;}
