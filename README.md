@@ -4,6 +4,8 @@ Your very own Podcast web app built with Laravel 5. This web app enables you to 
 ### Screenshots
 ![alt tag](https://raw.githubusercontent.com/modestkdr/Podcastwala/master/screenshots/prototype.png)
 
+![alt tag](https://raw.githubusercontent.com/modestkdr/Podcastwala/master/screenshots/manage-feeds.png)
+
 ### Install Instructions
 To install Podcastwala you can clone the repository:
 
