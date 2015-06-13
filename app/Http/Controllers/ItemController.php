@@ -88,4 +88,35 @@ class ItemController extends Controller {
 		}		
 		return $result;
 	}
+
+	/**
+	 * [markAsFavorite mark a podcast item as favorite]
+	 * @return array
+	 */
+	public function markAsFavorite()
+	{
+		$result['status'] = 0;
+		$result['message'] = 'Something went wrong, please try again';
+
+		$itemId = trim(strip_tags(Request::get('itemId')));
+
+		$item = DB::table('items')->select('user_id')
+				->where('user_id', '=', Auth::user()->id)
+				->where('id','=',$itemId)
+				->first();
+		
+		// if item with id exists in DB and is owned by the authenticated user
+		if($item)
+		{
+
+			$podcastItem = Item::findOrFail($itemId);
+			$result['currentValue'] = ! $podcastItem->is_mark_as_favorite;
+			$podcastItem->is_mark_as_favorite = ! $podcastItem->is_mark_as_favorite; // opposite of current value
+			$podcastItem->save();
+
+			$result['status'] = 1;
+			$result['message'] = 'This item has been updated';
+		}
+		return $result;
+	}
 }

@@ -163,4 +163,22 @@ class PodcastController extends Controller {
         return $result;
 	}
 
+	/**
+	 * Return the list of favorites for a user to a view
+	 * @return [type] [description]
+	 */
+	public function favorites()
+	{
+		$items = DB::table('items')
+				->where('user_id', '=', Auth::user()->id)
+				->where('is_mark_as_favorite', '!=', 0)
+				->orderBy('published_at','desc')->paginate(15);
+
+	    $data = array(
+	      'items'	=> $items,
+	    );
+
+	    return view('podcasts.favorites', $data);
+	}
+
 }

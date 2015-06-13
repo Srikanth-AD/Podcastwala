@@ -6262,6 +6262,7 @@ hr {border-top:1px solid #6C6C6C;}
 .play:hover,.mark-as-read:hover,.mark-all-prev-read:hover{cursor: pointer;}
 .play img:hover{cursor: pointer;}
 .player-action-list{text-align: center;}
+.player-action-list .mark-as-favorite:hover{cursor: pointer;}
 .player-action-list li,
 .podcast-action-list li{border:1px solid #111;margin:0.1rem .3rem;background: rgba(49, 49, 49, 0.66);padding:.3rem .6rem;}
 .podcast-action-list .feed-delete:hover{cursor: pointer;}

@@ -39,14 +39,21 @@
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
+                        <li class="mark-as-favorite" data-src="{{$item->id}}">
+                          @if($item->is_mark_as_favorite)
+                            <img width="24" height="24" alt="favorited" src="{{asset('css/icons/ic_favorite_white_36dp.png')}}" /> <span>Favorited</span>
+                            @else
+                              <img width="24" height="24" alt="mark as favorite" src="{{asset('css/icons/ic_favorite_grey600_36dp.png')}}" /> <span>Mark as Fav</span>
+                          @endif
+                        </li>
                         <li class="mark-all-prev-read" data-src="{{$item->id}}">
-                          <img width="24" height="24" alt="mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" /> Mark all previous as read
+                          <img width="24" height="24" alt="mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" /> <span>Mark all previous as read</span>
                         </li>
                         <li class="mark-as-read" data-src="{{$item->id}}">
-                            <img width="24" height="24" alt="mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> Mark as read
+                            <img width="24" height="24" alt="mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> <span>Mark as read</span>
                         </li>
                         <li class='play' data-src='{{ $item->audio_url}}'>
-                            <img width="24" height="24" alt="play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" /> Play
+                            <img width="24" height="24" alt="play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" /> <span>Play</span>
                         </li>
                     </ul>
                 </div>
@@ -83,55 +90,82 @@
     });
 
     $('.mark-as-read').on('click', function() {
-            if (confirm('Are you sure you want to mark this as read?')) {
-                var itemId = $(this).attr('data-src');
-                var itemRow = $(".mark-as-read[data-src=" + itemId + "]").parents(".podcast-item-row");
-                $.ajax({
-                    type: "POST",
-                    cache: false,
-                    url: "/item/mark-as-read",
-                    data: {
-                        'itemId': itemId,
-                        '_token': "{{ csrf_token() }}"
-                    },
-                    success: function(result) {
-                        if(result.status === 1)
-                        {
-                            $(itemRow).fadeOut(1000);
-                        }             
-                    }
-                });
-            }
-        });
+      if (confirm('Are you sure you want to mark this as read?')) {
+          var itemId = $(this).attr('data-src');
+          var itemRow = $(".mark-as-read[data-src=" + itemId + "]").parents(".podcast-item-row");
+          $.ajax({
+              type: "POST",
+              cache: false,
+              url: "/item/mark-as-read",
+              data: {
+                  'itemId': itemId,
+                  '_token': "{{ csrf_token() }}"
+              },
+              success: function(result) {
+                  if(result.status === 1)
+                  {
+                      $(itemRow).fadeOut(1000);
+                  }             
+              }
+          });
+      }
+    });
+
+    $('.mark-as-favorite').on('click', function() {
+      var itemId = $(this).attr('data-src');
+      $.ajax({
+          type: "POST",
+          cache: false,
+          url: "/item/mark-as-favorite",
+          data: {
+              'itemId': itemId,
+              '_token': "{{ csrf_token() }}"
+          },
+          success: function(result) {
+              if(result.status === 1)
+              {
+                // change fav img
+                if(result.currentValue === true)
+                {
+                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_white_36dp.png')}}');
+                  $(".mark-as-favorite[data-src=" + itemId + "] span").text('Favorited');
+                } else {
+                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_grey600_36dp.png')}}');
+                  $(".mark-as-favorite[data-src=" + itemId + "] span").text('Mark as Fav');
+                }
+              }             
+          }
+      });
+    });
 
     $('.mark-all-prev-read').on('click', function() {
-            if (confirm('Are you sure you want to mark all previous episodes in this podcast as read?')) {
-                var itemId = $(this).attr('data-src');
-                $.ajax({
-                    type: "POST",
-                    cache: false,
-                    url: "/item/mark-all-prev-read",
-                    data: {
-                        'itemId': itemId,
-                        '_token': "{{ csrf_token() }}"
-                    },
-                    success: function(result) {
-                        if(result.status === 1)
-                        {
-                          for(var i = 0; i < result.data.length; i++)
-                          {
-                            if($(".mark-all-prev-read[data-src=" + result.data[i] + "]"))
-                            {
-                              $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
-                              .parents(".podcast-item-row")
-                              .fadeOut(1000);
-                            }                            
-                          }                         
-                        }             
-                    }
-                });
-            }
-        });
+      if (confirm('Are you sure you want to mark all previous episodes in this podcast as read?')) {
+          var itemId = $(this).attr('data-src');
+          $.ajax({
+              type: "POST",
+              cache: false,
+              url: "/item/mark-all-prev-read",
+              data: {
+                  'itemId': itemId,
+                  '_token': "{{ csrf_token() }}"
+              },
+              success: function(result) {
+                  if(result.status === 1)
+                  {
+                    for(var i = 0; i < result.data.length; i++)
+                    {
+                      if($(".mark-all-prev-read[data-src=" + result.data[i] + "]"))
+                      {
+                        $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
+                        .parents(".podcast-item-row")
+                        .fadeOut(1000);
+                      }                            
+                    }                         
+                  }             
+              }
+          });
+      }
+    });
     </script>
   @endsection
 @endsection
