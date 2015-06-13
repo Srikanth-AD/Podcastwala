@@ -6253,7 +6253,7 @@ body {background:#efefef;}
 .pagination > .disabled > a:focus{ background-color: transparent;border:1px solid #555;}
 .play:hover,.mark-as-read:hover,.mark-all-prev-read:hover{cursor: pointer;}
 .play img:hover{cursor: pointer;}
-.player-action-list{text-align: right;}
+.player-action-list{text-align: center;}
 .player-action-list li{border:1px solid #111;margin:0.1rem .3rem;background: rgba(49, 49, 49, 0.66);padding:.3rem .6rem;}
 .podcast-item-title {margin-top: 0}
 .podcast-title {margin-bottom: 0}
@@ -6268,7 +6268,9 @@ body {background:#efefef;}
 
 @media (max-width: 767px) {
   .podcast-item-row{text-align: center;}
+  .podcast-item-title{font-size: 1.8rem;}
   .podcast-item-description{display: none;}
   .container-podcast-list {padding-top:7rem;}
   .podcast-thumbnail-container {}
+  .player-action-list{text-align: center;}
 }
