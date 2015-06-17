@@ -38,11 +38,12 @@ class UpdatePodcastItems extends Command {
 
 			$items = Feeds::make($podcast->feed_url)->get_items();
 
-			// Calculate 24 hours ago
-			$yesterday = time() - (24 * 1 * 60 * 60);
+			// Calculate 48 hours ago
+			$yesterday = time() - (24 * 2 * 60 * 60);
 
 			foreach ($items as $item) {
 				$itemPubDate = $item->get_date();
+
 				if ($item->get_date('U') > $yesterday) {
 
 					// new items
@@ -55,6 +56,7 @@ class UpdatePodcastItems extends Command {
 							->where('podcast_id', '=', $subscriber->podcast_id)
 							->count();
 
+						// if this item is not already in the DB
 						if ($podcastItemsCount == 0) {
 							Item::create([
 								'user_id' => $subscriber->user_id,

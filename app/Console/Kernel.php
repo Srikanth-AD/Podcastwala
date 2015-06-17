@@ -20,9 +20,8 @@ class Kernel extends ConsoleKernel {
 	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
 	 */
-	protected function schedule(Schedule $schedule)
-	{
-		$schedule->command('updatePodcastItems')->everyFiveMinutes(); //->dailyAt('05:00');
+	protected function schedule(Schedule $schedule) {
+		$schedule->command('updatePodcastItems')->twiceDaily();
 	}
 
 }
