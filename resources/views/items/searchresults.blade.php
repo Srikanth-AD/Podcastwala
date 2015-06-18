@@ -2,25 +2,25 @@
 
 @section('content')
 
-  @if($items)
-    <div id="player-container" class="container-fluid">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
-        <div class="now-playing">
-          <h4 class="podcast-item-title"></h4>
-        </div>
-        <audio id='player' controls preload="none">
-            <source src="" type="audio/mpeg">
-          </audio>
-      </div>
-      <div class="col-md-3"></div>
-    </div>
-  @endif
+	@if($items)
+	    <div id="player-container" class="container-fluid">
+	      <div class="col-md-3"></div>
+	      <div class="col-md-6">
+	        <div class="now-playing">
+	          <h4 class="podcast-item-title"></h4>
+	        </div>
+	        <audio id='player' controls preload="none">
+	            <source src="" type="audio/mpeg">
+	          </audio>
+	      </div>
+	      <div class="col-md-3"></div>
+	    </div>
+	@endif
 
-  <div class="main container-fluid container-podcast-list">
+	<div class="main container-fluid container-podcast-list">
     <div class="col-md-3"></div>
     <div class="col-md-6">
-        @if($items)
+	        @if($items)
         	@foreach ($items as $item)
 	            <div class="row podcast-item-row">
 	              <div class="col-md-3 podcast-thumbnail-container">
@@ -55,13 +55,9 @@
 	            </div>
         	@endforeach
 
-	        @if($items)
-	          <div class="row container-fluid">
-	              <?php echo $items->render()?>
-	          </div>
-	        @endif
+
       	@endif
-    </div>
+      	</div>
     <div class="col-md-3">
     </div>
   </div>
@@ -108,4 +104,6 @@
     });
     </script>
   @endsection
+
+
 @endsection

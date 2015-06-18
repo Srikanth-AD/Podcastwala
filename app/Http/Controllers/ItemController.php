@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers;
+use App\Item;
+use Auth;
 use DB;
 use Request;
-use Auth;
-use App\Item;
 
 class ItemController extends Controller {
 
@@ -11,8 +11,7 @@ class ItemController extends Controller {
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->middleware('auth');
 	}
 
@@ -20,27 +19,25 @@ class ItemController extends Controller {
 	 * [markAsRead mark a podcast item as read]
 	 * @return array
 	 */
-	public function markAsRead()
-	{
+	public function markAsRead() {
 		$result['status'] = 0;
 		$result['message'] = 'Something went wrong, please try again';
 
 		$itemId = trim(strip_tags(Request::get('itemId')));
 
 		$item = DB::table('items')->select('user_id')
-				->where('user_id', '=', Auth::user()->id)
-				->where('id','=',$itemId)
-				->first();
-		
+		                          ->where('user_id', '=', Auth::user()->id)
+		                          ->where('id', '=', $itemId)
+		                          ->first();
+
 		// if item with id exists in DB and is owned by the authenticated user
-		if($item)
-		{
+		if ($item) {
 			$podcastItem = Item::findOrFail($itemId);
 			$podcastItem->is_mark_as_read = 1;
 			$podcastItem->save();
 			$result['status'] = 1;
 			$result['message'] = 'This item has been marked as read';
-		}		
+		}
 		return $result;
 	}
 
@@ -48,29 +45,26 @@ class ItemController extends Controller {
 	 * [markAllPrevAsRead mark all previous item in a podcast as read]
 	 * @return array
 	 */
-	public function markAllPrevAsRead()
-	{
+	public function markAllPrevAsRead() {
 		$result['status'] = 0;
 		$result['message'] = 'Something went wrong, please try again';
 
 		$itemId = trim(strip_tags(Request::get('itemId')));
 
-		$item = DB::table('items')->select('published_at','podcast_id')
-				->where('user_id', '=', Auth::user()->id)
-				->where('id','=',$itemId)
-				->first();
-		if($item)
-		{
+		$item = DB::table('items')->select('published_at', 'podcast_id')
+		                          ->where('user_id', '=', Auth::user()->id)
+		                          ->where('id', '=', $itemId)
+		                          ->first();
+		if ($item) {
 			$items = DB::table('items')
-					->select('id','published_at')
-					->where('user_id','=', Auth::user()->id)
-					->where('podcast_id','=',$item->podcast_id)
-					->where('is_mark_as_read','!=',1)
-					->where('published_at','<', $item->published_at)
-					->get();
+				->select('id', 'published_at')
+				->where('user_id', '=', Auth::user()->id)
+				->where('podcast_id', '=', $item->podcast_id)
+				->where('is_mark_as_read', '!=', 1)
+				->where('published_at', '<', $item->published_at)
+				->get();
 
 			$itemIds = [];
-
 
 			foreach ($items as $record) {
 				$record = Item::findOrFail($record->id);
@@ -84,8 +78,8 @@ class ItemController extends Controller {
 
 			$result['status'] = 1;
 			$result['data'] = $itemIds;
-			$result['message'] = 'Previous items in this podcast has been marked as read';			
-		}		
+			$result['message'] = 'Previous items in this podcast has been marked as read';
+		}
 		return $result;
 	}
 
@@ -93,30 +87,45 @@ class ItemController extends Controller {
 	 * [markAsFavorite mark a podcast item as favorite]
 	 * @return array
 	 */
-	public function markAsFavorite()
-	{
+	public function markAsFavorite() {
 		$result['status'] = 0;
 		$result['message'] = 'Something went wrong, please try again';
 
 		$itemId = trim(strip_tags(Request::get('itemId')));
 
 		$item = DB::table('items')->select('user_id')
-				->where('user_id', '=', Auth::user()->id)
-				->where('id','=',$itemId)
-				->first();
-		
+		                          ->where('user_id', '=', Auth::user()->id)
+		                          ->where('id', '=', $itemId)
+		                          ->first();
+
 		// if item with id exists in DB and is owned by the authenticated user
-		if($item)
-		{
+		if ($item) {
 
 			$podcastItem = Item::findOrFail($itemId);
-			$result['currentValue'] = ! $podcastItem->is_mark_as_favorite;
-			$podcastItem->is_mark_as_favorite = ! $podcastItem->is_mark_as_favorite; // opposite of current value
+			$result['currentValue'] = !$podcastItem->is_mark_as_favorite;
+			$podcastItem->is_mark_as_favorite = !$podcastItem->is_mark_as_favorite; // opposite of current value
 			$podcastItem->save();
 
 			$result['status'] = 1;
 			$result['message'] = 'This item has been updated';
 		}
 		return $result;
+	}
+
+	/**
+	 * Return a view to display item search results for a given query
+	 */
+
+	public function search() {
+		$query = trim(strip_tags(Request::get('query')));
+		$items = DB::table('items')
+			->where('title', 'LIKE', "%$query%")
+			->orWhere('description', 'LIKE', "%$query%")
+			->get();
+
+		return view('items.searchresults')->with([
+			'items' => $items,
+			'query' => $query,
+		]);
 	}
 }

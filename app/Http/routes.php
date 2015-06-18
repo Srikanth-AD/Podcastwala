@@ -9,7 +9,7 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
-*/
+ */
 
 Route::get('/', 'PodcastController@index');
 
@@ -20,7 +20,7 @@ Route::get('podcast/settings', 'PodcastController@settings');
 Route::post('podcast/add', 'PodcastController@add');
 Route::post('podcast/delete', 'PodcastController@delete');
 
-
+Route::get('item/search', 'ItemController@search');
 Route::post('item/mark-as-read', 'ItemController@markAsRead');
 Route::post('item/mark-as-favorite', 'ItemController@markAsFavorite');
 Route::post('item/mark-all-prev-read', 'ItemController@markAllPrevAsRead');

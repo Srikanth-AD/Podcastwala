@@ -18,23 +18,23 @@
   @endif
 
   <div class="main container-fluid container-podcast-list">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         @if($items)
           @foreach ($items as $item)
             <div class="row podcast-item-row">
               <div class="col-md-3 podcast-thumbnail-container">
-                <img class="podcast-thumbnail" width="100" height="100" 
+                <img class="podcast-thumbnail" width="100" height="100"
                   src="{{asset(App\Item::find($item->id)->podcast->feed_thumbnail_location)}}" />
                 <p><small>{{ date_format(date_create($item->published_at),'jS M Y') }}</small></p>
               </div>
               <div class="col-md-9">
                 <h4 class="podcast-title"><small>{{App\Item::find($item->id)->podcast->name}}</small></h4>
-                <h3 class="podcast-item-title"> 
-                  <a target="_blank" href="{{ $item->url }}">{{ $item->title }}</a>            
+                <h3 class="podcast-item-title">
+                  <a target="_blank" href="{{ $item->url }}">{{ $item->title }}</a>
                 </h3>
-                <p class="podcast-item-description">{{ $item->description}} 
-                    &nbsp; 
+                <p class="podcast-item-description">{{ $item->description}}
+                    <br/>
                     <a class="read-more" target="_blank" href="{{ $item->url }}"><small>Read More</small></a>
                 </p>
                 <div class="player-action-list">
@@ -63,15 +63,15 @@
 
         @if($items)
           <div class="row container-fluid">
-              <?php echo $items->render() ?>
+              <?php echo $items->render()?>
           </div>
         @endif
 
-        @else 
+        @else
           <p class="text-white">Please <a href="{{ url('/podcast/manage') }}">add a feed</a> to view podcasts here...</p>
       @endif
     </div>
-    <div class="col-md-3">      
+    <div class="col-md-2">
     </div>
   </div>
   @section('js-footer')
@@ -82,7 +82,7 @@
         $('#player source').attr('src', $(this).attr('data-src'));
         $('#player').trigger('load').trigger('play');
         $('#player-container .now-playing .podcast-item-title').text(
-          'Now playing - ' + 
+          'Now playing - ' +
           $(this).parents('.podcast-item-row').find('.podcast-item-title > a').text());
         $('.podcast-item-row').removeClass('active');
         $(this).parents('.podcast-item-row').addClass('active');
@@ -105,7 +105,7 @@
                   if(result.status === 1)
                   {
                       $(itemRow).fadeOut(1000);
-                  }             
+                  }
               }
           });
       }
@@ -133,7 +133,7 @@
                   $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_grey600_36dp.png')}}');
                   $(".mark-as-favorite[data-src=" + itemId + "] span").text('Mark as Fav');
                 }
-              }             
+              }
           }
       });
     });
@@ -159,9 +159,9 @@
                         $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
                         .parents(".podcast-item-row")
                         .fadeOut(1000);
-                      }                            
-                    }                         
-                  }             
+                      }
+                    }
+                  }
               }
           });
       }
