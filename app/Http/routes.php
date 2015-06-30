@@ -20,6 +20,13 @@ Route::get('podcast/settings', 'PodcastController@settings');
 Route::post('podcast/add', 'PodcastController@add');
 Route::post('podcast/delete', 'PodcastController@delete');
 
+Route::get('podcast/auto-update', function () {
+	$exitCode = \Artisan::call('updatePodcastItems');
+	if ($exitCode == 0) {
+		return redirect('podcast/player');
+	}
+});
+
 Route::get('item/search', 'ItemController@search');
 Route::post('item/mark-as-read', 'ItemController@markAsRead');
 Route::post('item/mark-as-favorite', 'ItemController@markAsFavorite');
