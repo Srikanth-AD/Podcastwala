@@ -63,8 +63,10 @@ class PodcastController extends Controller {
 	 */
 	public function add() {
 
-		// create "images" directory under "public" directory
-		File::makeDirectory(public_path() . '/images');
+		// create "images" directory under "public" directory if it doesn't exist
+		if (!File::exists(public_path() . '/images')) {
+			File::makeDirectory(public_path() . '/images');
+		}
 
 		if (Request::get('feed_url')) {
 			$feed = Feeds::make(Request::get('feed_url'));
