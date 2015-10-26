@@ -6259,7 +6259,7 @@ hr {border-top:1px solid #6C6C6C;}
 .pagination > .disabled > a,
 .pagination > .disabled > a:hover,
 .pagination > .disabled > a:focus{ background-color: transparent;border:1px solid #555;}
-.play:hover,.mark-as-read:hover,.mark-all-prev-read:hover{cursor: pointer;}
+.play:hover,.mark-as-read:hover,.mark-all-prev-read:hover, .download a:hover{cursor: pointer;}
 .play img:hover{cursor: pointer;}
 .player-action-list{text-align: center;}
 .player-action-list .mark-as-favorite:hover{cursor: pointer;}

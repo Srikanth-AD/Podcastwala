@@ -41,19 +41,24 @@
                     <ul class="list-inline">
                         <li class="mark-as-favorite" data-src="{{$item->id}}">
                           @if($item->is_mark_as_favorite)
-                            <img width="24" height="24" alt="favorited" src="{{asset('css/icons/ic_favorite_white_36dp.png')}}" /> <span>Favorited</span>
+                            <img alt="Remove from favorites" title="Remove from favorites" width="24" height="24" alt="favorited" src="{{asset('css/icons/ic_favorite_white_36dp.png')}}" />
                             @else
-                              <img width="24" height="24" alt="mark as favorite" src="{{asset('css/icons/ic_favorite_grey600_36dp.png')}}" /> <span>Mark as Fav</span>
+                              <img width="24" height="24" title="Mark as favorite" alt="Mark as favorite" src="{{asset('css/icons/ic_favorite_grey600_36dp.png')}}" />
                           @endif
                         </li>
                         <li class="mark-all-prev-read" data-src="{{$item->id}}">
-                          <img width="24" height="24" alt="mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" /> <span>Mark all previous as read</span>
+                          <img width="24" height="24" title="Mark all as read" alt="Mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" />
                         </li>
                         <li class="mark-as-read" data-src="{{$item->id}}">
-                            <img width="24" height="24" alt="mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> <span>Mark as read</span>
+                            <img width="24" height="24" title="Mark as read" alt="Mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> 
                         </li>
                         <li class='play' data-src='{{ $item->audio_url}}'>
-                            <img width="24" height="24" alt="play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" /> <span>Play</span>
+                            <img width="24" height="24" title="Play" alt="Play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" />
+                        </li>
+                        <li class='download'>
+                          <a href='{{ $item->audio_url}}' download='{{ $item->audio_url}}'>
+                            <img width="24" height="24" title="Download" alt="Download" src="{{asset('css/icons/ic_file_download_white_36dp.png')}}" />
+                          </a>
                         </li>
                     </ul>
                 </div>
@@ -127,11 +132,9 @@
                 // change fav img
                 if(result.currentValue === true)
                 {
-                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_white_36dp.png')}}');
-                  $(".mark-as-favorite[data-src=" + itemId + "] span").text('Favorited');
+                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_white_36dp.png')}}').attr('title', 'Remove from Favorites');
                 } else {
-                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_grey600_36dp.png')}}');
-                  $(".mark-as-favorite[data-src=" + itemId + "] span").text('Mark as Fav');
+                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_grey600_36dp.png')}}').attr('title', 'Add to Favorites');
                 }
               }
           }
