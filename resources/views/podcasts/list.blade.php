@@ -39,6 +39,9 @@
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
+                        <li class='play' data-src='{{ $item->audio_url}}'>
+                            <img width="24" height="24" title="Play" alt="Play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" />
+                        </li>
                         <li class="mark-as-favorite" data-src="{{$item->id}}">
                           @if($item->is_mark_as_favorite)
                             <img alt="Remove from favorites" title="Remove from favorites" width="24" height="24" alt="favorited" src="{{asset('css/icons/ic_favorite_white_36dp.png')}}" />
@@ -46,14 +49,11 @@
                               <img width="24" height="24" title="Mark as favorite" alt="Mark as favorite" src="{{asset('css/icons/ic_favorite_grey600_36dp.png')}}" />
                           @endif
                         </li>
-                        <li class="mark-all-prev-read" data-src="{{$item->id}}">
-                          <img width="24" height="24" title="Mark all as read" alt="Mark all as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" />
-                        </li>
                         <li class="mark-as-read" data-src="{{$item->id}}">
                             <img width="24" height="24" title="Mark as read" alt="Mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> 
-                        </li>
-                        <li class='play' data-src='{{ $item->audio_url}}'>
-                            <img width="24" height="24" title="Play" alt="Play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" />
+                        </li> 
+                        <li class="mark-all-prev-read" data-src="{{$item->id}}">
+                          <img width="24" height="24" title="Mark all previous as read" alt="Mark all previous as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" />
                         </li>
                         <li class='download'>
                           <a href='{{ $item->audio_url}}' download='{{ $item->audio_url}}'>
