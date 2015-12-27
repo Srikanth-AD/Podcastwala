@@ -6233,7 +6233,7 @@ label,
 }
 
 /* Podcast app CSS */
-body {background:rgba(28,28, 30, 0.87);}
+body {background:#131315;}
 .main {padding-top: 2rem;}
 hr {border-top:1px solid #6C6C6C;}
 .page-title,.section-title{color:rgba(159, 159, 159, 0.87);}
@@ -6270,8 +6270,7 @@ hr {border-top:1px solid #6C6C6C;}
 .podcast-title {margin-bottom: 0}
 .podcast-thumbnail-container {text-align: center;}
 .podcast-thumbnail {margin-top: 1.5rem;margin-bottom: 1rem;}
-.podcast-item-row {  background: rgba(21, 21, 21, 0.72);color: #FFF;margin:2.5rem 0;}
-.podcast-item-row:hover{}
+.podcast-item-row {  background: #222324;border:1px solid #39393C;color: #FFF;margin:2.5rem 0;}
 .podcast-item-row.active {background: rgba(255, 255, 255, 0.17);color:#000;}
 .podcast-item-row.active .btn-sm {border:1px solid #333;}
 .now-playing .podcast-item-title{color:#efefef;}
@@ -6284,4 +6283,5 @@ hr {border-top:1px solid #6C6C6C;}
   .container-podcast-list {padding-top:7rem;}
   .podcast-thumbnail-container {}
   .player-action-list{text-align: center;}
+  .player-action-list li{margin: 0.1rem .8rem;}
 }
