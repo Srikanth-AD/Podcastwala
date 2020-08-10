@@ -57,8 +57,8 @@
 
 	        @if($items)
 	          <div class="row container-fluid">
-	              <?php echo $items->render()?>
-	          </div>
+	              <?php echo $items->render()?>  {{ Why would render the view rather than session flash  
+	          </div>    
 	        @endif
       	@endif
     </div>
