@@ -1,47 +1,30 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateItemsTable extends Migration {
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('podcast_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->longText('description');
+            $table->string('url');
+            $table->string('audio_url');
+            $table->timestamp('published_at')->nullable();
+            $table->boolean('is_mark_as_read')->default(false);
+            $table->boolean('is_mark_as_favorite')->default(false);
+            $table->timestamps();
+        });
+    }
 
-	/**
-	 * Setup database table for items in each podcast
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('items', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->timestamps();
-			$table->integer('user_id')->unsigned();
-			$table->string('title');
-			$table->longText('description');
-			$table->string('url');
-			$table->string('audio_url');
-			$table->date('published_at');
-			$table->integer('podcast_id')->unsigned();
-			$table->foreign('podcast_id')
-                    ->references('id')
-                    ->on('podcasts')
-                    ->onDelete('cascade');
-            $table->foreign('user_id')
-				->references('id')
-				->on('users')
-				->onDelete('cascade');
-		});
-	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('items');
-	}
-
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('items');
+    }
+};
