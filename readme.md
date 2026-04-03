@@ -1,23 +1,100 @@
-## Laravel PHP Framework
+# Podcastwala
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+A self-hosted podcast web application built with Laravel. Subscribe to podcast RSS feeds, manage episodes, and listen to audio directly in your browser.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+## Features
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+- Subscribe to any podcast via RSS feed URL
+- Automatic feed parsing with thumbnail extraction
+- Built-in HTML5 audio player
+- Mark episodes as read / mark all previous as read
+- Favorite episodes for quick access
+- Search across episode titles and descriptions
+- Scheduled automatic feed updates (twice daily)
+- Per-user podcast subscriptions (multi-user support)
+- Mobile-responsive UI
 
-## Official Documentation
+## Screenshots
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+| Manage Feeds | Player |
+|---|---|
+| ![Manage Feeds](screenshots/manage-feeds.png) | ![Player](screenshots/prototype.png) |
 
-## Contributing
+## Requirements
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+- PHP 8.2+
+- Composer
+- Node.js 18+ & npm
+- SQLite (default) or MySQL/PostgreSQL
 
-### License
+## Installation
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+```bash
+# Clone the repository
+git clone https://github.com/modestkdr/Podcastwala.git
+cd Podcastwala
+
+# Install PHP dependencies
+composer install
+
+# Install JS dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+
+# Run database migrations
+php artisan migrate
+
+# Build frontend assets
+npm run build
+
+# Start the development server
+php artisan serve
+```
+
+Visit `http://localhost:8000`, register an account, and start adding podcast feeds.
+
+## Usage
+
+1. **Register/Login** - Create an account to get started
+2. **Add Feeds** - Go to "Manage Feeds" and paste a podcast RSS URL
+3. **Listen** - Click "Listen" to see your unread episodes and play audio
+4. **Favorites** - Star episodes to find them later in the Favorites tab
+5. **Search** - Search across all your subscribed episode titles and descriptions
+
+## Auto-updating Feeds
+
+New episodes are fetched automatically via a scheduled command. Add this cron entry to your server:
+
+```
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Or trigger a manual update:
+
+```bash
+php artisan podcasts:update
+```
+
+## Running Tests
+
+```bash
+php artisan test
+```
+
+Tests use an in-memory SQLite database and cover models, controllers, authentication, and authorization.
+
+## Tech Stack
+
+- **Backend**: Laravel 11, PHP 8.2+
+- **Frontend**: Bootstrap 3, jQuery, HTML5 Audio
+- **Build**: Vite
+- **Database**: SQLite (default), MySQL, PostgreSQL
+- **Feed Parsing**: SimplePie (via willvincent/feeds)
+- **Image Processing**: Intervention Image 3
+
+## License
+
+This project is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
