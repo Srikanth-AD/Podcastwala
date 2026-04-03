@@ -2,7 +2,7 @@
 
 @section('content')
 
-  @if($items)
+  @if($items->count())
     <div id="player-container" class="container-fluid">
       <div class="col-md-3"></div>
       <div class="col-md-6">
@@ -20,44 +20,46 @@
   <div class="main container-fluid container-podcast-list">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        @if($items)
+        @if($items->count())
           @foreach ($items as $item)
             <div class="row podcast-item-row">
               <div class="col-md-3 podcast-thumbnail-container">
-                <img class="podcast-thumbnail" width="100" height="100"
-                  src="{{asset(App\Item::find($item->id)->podcast->feed_thumbnail_location)}}" />
-                <p><small>{{ date_format(date_create($item->published_at),'jS M Y') }}</small></p>
+                @if($item->podcast && $item->podcast->feed_thumbnail_location)
+                  <img class="podcast-thumbnail" width="100" height="100"
+                    src="{{ asset($item->podcast->feed_thumbnail_location) }}" />
+                @endif
+                <p><small>{{ $item->published_at->format('jS M Y') }}</small></p>
               </div>
               <div class="col-md-9">
-                <h4 class="podcast-title"><small>{{App\Item::find($item->id)->podcast->name}}</small></h4>
+                <h4 class="podcast-title"><small>{{ $item->podcast->name ?? 'Unknown' }}</small></h4>
                 <h3 class="podcast-item-title">
                   <a target="_blank" href="{{ $item->url }}">{{ $item->title }}</a>
                 </h3>
-                <p class="podcast-item-description">{{ $item->description}}
+                <p class="podcast-item-description">{{ $item->description }}
                     <br/>
                     <a class="read-more" target="_blank" href="{{ $item->url }}"><small>Read More</small></a>
                 </p>
                 <div class="player-action-list">
                     <ul class="list-inline">
-                        <li class='play' data-src='{{ $item->audio_url}}'>
-                            <img width="24" height="24" title="Play" alt="Play" src="{{asset('css/icons/ic_play_circle_filled_white_36dp.png')}}" />
+                        <li class='play' data-src='{{ $item->audio_url }}'>
+                            <img width="24" height="24" title="Play" alt="Play" src="{{ asset('css/icons/ic_play_circle_filled_white_36dp.png') }}" />
                         </li>
-                        <li class="mark-as-favorite" data-src="{{$item->id}}">
+                        <li class="mark-as-favorite" data-src="{{ $item->id }}">
                           @if($item->is_mark_as_favorite)
-                            <img alt="Remove from favorites" title="Remove from favorites" width="24" height="24" alt="favorited" src="{{asset('css/icons/ic_favorite_white_36dp.png')}}" />
+                            <img alt="Remove from favorites" title="Remove from favorites" width="24" height="24" src="{{ asset('css/icons/ic_favorite_white_36dp.png') }}" />
                             @else
-                              <img width="24" height="24" title="Mark as favorite" alt="Mark as favorite" src="{{asset('css/icons/ic_favorite_grey600_36dp.png')}}" />
+                              <img width="24" height="24" title="Mark as favorite" alt="Mark as favorite" src="{{ asset('css/icons/ic_favorite_grey600_36dp.png') }}" />
                           @endif
                         </li>
-                        <li class="mark-as-read" data-src="{{$item->id}}">
-                            <img width="24" height="24" title="Mark as read" alt="Mark as read" src="{{asset('css/icons/ic_done_white_36dp.png')}}" /> 
-                        </li> 
-                        <li class="mark-all-prev-read" data-src="{{$item->id}}">
-                          <img width="24" height="24" title="Mark all previous as read" alt="Mark all previous as read" src="{{asset('css/icons/ic_done_all_white_36dp.png')}}" />
+                        <li class="mark-as-read" data-src="{{ $item->id }}">
+                            <img width="24" height="24" title="Mark as read" alt="Mark as read" src="{{ asset('css/icons/ic_done_white_36dp.png') }}" />
+                        </li>
+                        <li class="mark-all-prev-read" data-src="{{ $item->id }}">
+                          <img width="24" height="24" title="Mark all previous as read" alt="Mark all previous as read" src="{{ asset('css/icons/ic_done_all_white_36dp.png') }}" />
                         </li>
                         <li class='download'>
-                          <a href='{{ $item->audio_url}}' download='{{ $item->audio_url}}'>
-                            <img width="24" height="24" title="Download" alt="Download" src="{{asset('css/icons/ic_file_download_white_36dp.png')}}" />
+                          <a href='{{ $item->audio_url }}' download='{{ $item->audio_url }}'>
+                            <img width="24" height="24" title="Download" alt="Download" src="{{ asset('css/icons/ic_file_download_white_36dp.png') }}" />
                           </a>
                         </li>
                     </ul>
@@ -66,14 +68,12 @@
             </div>
         @endforeach
 
-        @if($items)
-          <div class="row container-fluid">
-              <?php echo $items->render()?>
-          </div>
-        @endif
+        <div class="row container-fluid">
+            {{ $items->links() }}
+        </div>
 
         @else
-          <p class="text-white">Please <a href="{{ url('/podcast/manage') }}">add a feed</a> to view podcasts here...</p>
+          <p class="text-white">Please <a href="{{ route('podcast.manage') }}">add a feed</a> to view podcasts here...</p>
       @endif
     </div>
     <div class="col-md-2">
@@ -92,82 +92,66 @@
         $('.podcast-item-row').removeClass('active');
         $(this).parents('.podcast-item-row').addClass('active');
       });
-    });
 
-    $('.mark-as-read').on('click', function() {
-      if (confirm('Are you sure you want to mark this as read?')) {
-          var itemId = $(this).attr('data-src');
-          var itemRow = $(".mark-as-read[data-src=" + itemId + "]").parents(".podcast-item-row");
-          $.ajax({
-              type: "POST",
-              cache: false,
-              url: "/item/mark-as-read",
-              data: {
-                  'itemId': itemId,
-                  '_token': "{{ csrf_token() }}"
-              },
-              success: function(result) {
-                  if(result.status === 1)
-                  {
-                      $(itemRow).fadeOut(1000);
-                  }
-              }
-          });
-      }
-    });
-
-    $('.mark-as-favorite').on('click', function() {
-      var itemId = $(this).attr('data-src');
-      $.ajax({
-          type: "POST",
-          cache: false,
-          url: "/item/mark-as-favorite",
-          data: {
-              'itemId': itemId,
-              '_token': "{{ csrf_token() }}"
-          },
-          success: function(result) {
-              if(result.status === 1)
-              {
-                // change fav img
-                if(result.currentValue === true)
-                {
-                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_white_36dp.png')}}').attr('title', 'Remove from Favorites');
-                } else {
-                  $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{asset('css/icons/ic_favorite_grey600_36dp.png')}}').attr('title', 'Add to Favorites');
+      $('.mark-as-read').on('click', function() {
+        if (confirm('Are you sure you want to mark this as read?')) {
+            var itemId = $(this).attr('data-src');
+            var itemRow = $(".mark-as-read[data-src=" + itemId + "]").parents(".podcast-item-row");
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "{{ route('item.mark-as-read') }}",
+                data: { 'itemId': itemId },
+                success: function(result) {
+                    if(result.status === 1) {
+                        $(itemRow).fadeOut(1000);
+                    }
                 }
-              }
-          }
+            });
+        }
       });
-    });
 
-    $('.mark-all-prev-read').on('click', function() {
-      if (confirm('Are you sure you want to mark all previous episodes in this podcast as read?')) {
-          var itemId = $(this).attr('data-src');
-          $.ajax({
-              type: "POST",
-              cache: false,
-              url: "/item/mark-all-prev-read",
-              data: {
-                  'itemId': itemId,
-                  '_token': "{{ csrf_token() }}"
-              },
-              success: function(result) {
-                  if(result.status === 1)
-                  {
-                    for(var i = 0; i < result.data.length; i++)
-                    {
-                      if($(".mark-all-prev-read[data-src=" + result.data[i] + "]"))
-                      {
-                        $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
-                        .parents(".podcast-item-row")
-                        .fadeOut(1000);
+      $('.mark-as-favorite').on('click', function() {
+        var itemId = $(this).attr('data-src');
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: "{{ route('item.mark-as-favorite') }}",
+            data: { 'itemId': itemId },
+            success: function(result) {
+                if(result.status === 1) {
+                  if(result.currentValue === true) {
+                    $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{ asset('css/icons/ic_favorite_white_36dp.png') }}').attr('title', 'Remove from Favorites');
+                  } else {
+                    $(".mark-as-favorite[data-src=" + itemId + "]").find('img').attr('src','{{ asset('css/icons/ic_favorite_grey600_36dp.png') }}').attr('title', 'Add to Favorites');
+                  }
+                }
+            }
+        });
+      });
+
+      $('.mark-all-prev-read').on('click', function() {
+        if (confirm('Are you sure you want to mark all previous episodes in this podcast as read?')) {
+            var itemId = $(this).attr('data-src');
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "{{ route('item.mark-all-prev-read') }}",
+                data: { 'itemId': itemId },
+                success: function(result) {
+                    if(result.status === 1) {
+                      for(var i = 0; i < result.data.length; i++) {
+                        if($(".mark-all-prev-read[data-src=" + result.data[i] + "]")) {
+                          $(".mark-all-prev-read[data-src=" + result.data[i] + "]")
+                          .parents(".podcast-item-row")
+                          .fadeOut(1000);
+                        }
                       }
                     }
-                  }
-              }
-          });
-      }
+                }
+            });
+        }
+      });
     });
     </script>
   @endsection

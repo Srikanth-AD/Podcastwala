@@ -1,80 +1,73 @@
-<?php namespace App\Console\Commands;
-use App\Item;
-use App\Podcast;
-use DB;
-use Feeds;
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Item;
+use App\Models\Podcast;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
+use Willvincent\Feeds\Facades\FeedsFacade as Feeds;
 
-class UpdatePodcastItems extends Command {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'updatePodcastItems';
+class UpdatePodcastItems extends Command
+{
+    protected $signature = 'podcasts:update';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Update podcast items daily at 5 AM - from RSS feeds';
+    protected $description = 'Fetch new episodes from subscribed podcast RSS feeds';
 
-	/**
-	 * Update podcast items
-	 *
-	 * @return mixed
-	 */
-	public function handle() {
-		$uniquePodcasts = DB::table('podcasts')
-			->select('id', 'feed_url', 'machine_name')
-			->groupBy('machine_name')->get();
+    public function handle(): int
+    {
+        $uniquePodcasts = Podcast::query()
+            ->select('feed_url', 'machine_name')
+            ->distinct()
+            ->get();
 
-		foreach ($uniquePodcasts as $podcast) {
-			$usersSubscribedToThisPodcast = DB::table('podcasts')
-				->select('user_id', 'id as podcast_id')
-				->where('machine_name', '=', $podcast->machine_name)
-				->get();
+        foreach ($uniquePodcasts as $podcast) {
+            $subscribers = Podcast::where('machine_name', $podcast->machine_name)
+                ->select('user_id', 'id as podcast_id')
+                ->get();
 
-			$items = Feeds::make($podcast->feed_url)->get_items();
+            try {
+                $items = Feeds::make($podcast->feed_url)->get_items();
+            } catch (\Exception $e) {
+                $this->error("Failed to fetch feed: {$podcast->feed_url} - {$e->getMessage()}");
+                continue;
+            }
 
-			// Calculate 48 hours ago
-			$yesterday = time() - (24 * 2 * 60 * 60);
+            $cutoff = now()->subHours(48)->timestamp;
 
-			foreach ($items as $item) {
-				$itemPubDate = $item->get_date();
+            foreach ($items as $item) {
+                if ($item->get_date('U') <= $cutoff) {
+                    break;
+                }
 
-				if ($item->get_date('U') > $yesterday) {
+                $enclosure = $item->get_enclosure();
+                if (!$enclosure) {
+                    continue;
+                }
 
-					// new items
-					foreach ($usersSubscribedToThisPodcast as $subscriber) {
+                foreach ($subscribers as $subscriber) {
+                    $exists = Item::where('title', strip_tags($item->get_title()))
+                        ->where('user_id', $subscriber->user_id)
+                        ->where('podcast_id', $subscriber->podcast_id)
+                        ->exists();
 
-						$podcastItemsCount = DB::table('items')
-							->select('user_id', 'title', 'podcast_id')
-							->where('title', '=', strip_tags($item->get_title()))
-							->where('user_id', '=', $subscriber->user_id)
-							->where('podcast_id', '=', $subscriber->podcast_id)
-							->count();
+                    if (!$exists) {
+                        Item::create([
+                            'user_id' => $subscriber->user_id,
+                            'title' => strip_tags($item->get_title()),
+                            'description' => strip_tags(Str::limit($item->get_description(), 100)),
+                            'published_at' => $item->get_date('Y-m-d'),
+                            'url' => $item->get_permalink(),
+                            'audio_url' => $enclosure->get_link(),
+                            'podcast_id' => $subscriber->podcast_id,
+                        ]);
+                    }
+                }
+            }
+        }
 
-						// if this item is not already in the DB
-						if ($podcastItemsCount == 0) {
-							Item::create([
-								'user_id' => $subscriber->user_id,
-								'title' => strip_tags($item->get_title()),
-								'description' => strip_tags(str_limit($item->get_description(), 100)),
-								'published_at' => $item->get_date('Y-m-d'),
-								'url' => $item->get_permalink(),
-								'audio_url' => $item->get_enclosure()->get_link(),
-								'podcast_id' => $subscriber->podcast_id,
-							]);
-						}
-					}
-				} else {
-					break;
-				}
-			}
+        $this->info('Podcast items updated successfully.');
 
-		}
-
-	}
+        return Command::SUCCESS;
+    }
 }

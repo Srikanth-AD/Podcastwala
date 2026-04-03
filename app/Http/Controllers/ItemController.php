@@ -1,131 +1,98 @@
-<?php namespace App\Http\Controllers;
-use App\Item;
-use Auth;
-use DB;
-use Request;
+<?php
 
-class ItemController extends Controller {
+namespace App\Http\Controllers;
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		$this->middleware('auth');
-	}
+use App\Models\Item;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-	/**
-	 * [markAsRead mark a podcast item as read]
-	 * @return array
-	 */
-	public function markAsRead() {
-		$result['status'] = 0;
-		$result['message'] = 'Something went wrong, please try again';
+class ItemController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-		$itemId = trim(strip_tags(Request::get('itemId')));
+    public function markAsRead(Request $request)
+    {
+        $request->validate(['itemId' => 'required|integer']);
 
-		$item = DB::table('items')->select('user_id')
-		                          ->where('user_id', '=', Auth::user()->id)
-		                          ->where('id', '=', $itemId)
-		                          ->first();
+        $item = Item::where('id', $request->input('itemId'))
+            ->where('user_id', Auth::id())
+            ->first();
 
-		// if item with id exists in DB and is owned by the authenticated user
-		if ($item) {
-			$podcastItem = Item::findOrFail($itemId);
-			$podcastItem->is_mark_as_read = 1;
-			$podcastItem->save();
-			$result['status'] = 1;
-			$result['message'] = 'This item has been marked as read';
-		}
-		return $result;
-	}
+        if (!$item) {
+            return response()->json(['status' => 0, 'message' => 'Item not found']);
+        }
 
-	/**
-	 * [markAllPrevAsRead mark all previous item in a podcast as read]
-	 * @return array
-	 */
-	public function markAllPrevAsRead() {
-		$result['status'] = 0;
-		$result['message'] = 'Something went wrong, please try again';
+        $item->is_mark_as_read = true;
+        $item->save();
 
-		$itemId = trim(strip_tags(Request::get('itemId')));
+        return response()->json(['status' => 1, 'message' => 'This item has been marked as read']);
+    }
 
-		$item = DB::table('items')->select('published_at', 'podcast_id')
-		                          ->where('user_id', '=', Auth::user()->id)
-		                          ->where('id', '=', $itemId)
-		                          ->first();
-		if ($item) {
-			$items = DB::table('items')
-				->select('id', 'published_at')
-				->where('user_id', '=', Auth::user()->id)
-				->where('podcast_id', '=', $item->podcast_id)
-				->where('is_mark_as_read', '!=', 1)
-				->where('published_at', '<', $item->published_at)
-				->get();
+    public function markAllPrevAsRead(Request $request)
+    {
+        $request->validate(['itemId' => 'required|integer']);
 
-			$itemIds = [];
+        $item = Item::where('id', $request->input('itemId'))
+            ->where('user_id', Auth::id())
+            ->first();
 
-			foreach ($items as $record) {
-				$record = Item::findOrFail($record->id);
-				$record->is_mark_as_read = 1;
-				$record->save();
+        if (!$item) {
+            return response()->json(['status' => 0, 'message' => 'Item not found']);
+        }
 
-				array_push($itemIds, $record->id);
-			}
+        $updatedIds = Item::where('user_id', Auth::id())
+            ->where('podcast_id', $item->podcast_id)
+            ->where('is_mark_as_read', false)
+            ->where('published_at', '<', $item->published_at)
+            ->pluck('id')
+            ->toArray();
 
-			// @todo need to limit the item ids sent to 15 (descending order)
+        Item::whereIn('id', $updatedIds)->update(['is_mark_as_read' => true]);
 
-			$result['status'] = 1;
-			$result['data'] = $itemIds;
-			$result['message'] = 'Previous items in this podcast has been marked as read';
-		}
-		return $result;
-	}
+        return response()->json([
+            'status' => 1,
+            'data' => $updatedIds,
+            'message' => 'Previous items in this podcast have been marked as read',
+        ]);
+    }
 
-	/**
-	 * [markAsFavorite mark a podcast item as favorite]
-	 * @return array
-	 */
-	public function markAsFavorite() {
-		$result['status'] = 0;
-		$result['message'] = 'Something went wrong, please try again';
+    public function markAsFavorite(Request $request)
+    {
+        $request->validate(['itemId' => 'required|integer']);
 
-		$itemId = trim(strip_tags(Request::get('itemId')));
+        $item = Item::where('id', $request->input('itemId'))
+            ->where('user_id', Auth::id())
+            ->first();
 
-		$item = DB::table('items')->select('user_id')
-		                          ->where('user_id', '=', Auth::user()->id)
-		                          ->where('id', '=', $itemId)
-		                          ->first();
+        if (!$item) {
+            return response()->json(['status' => 0, 'message' => 'Item not found']);
+        }
 
-		// if item with id exists in DB and is owned by the authenticated user
-		if ($item) {
+        $item->is_mark_as_favorite = !$item->is_mark_as_favorite;
+        $item->save();
 
-			$podcastItem = Item::findOrFail($itemId);
-			$result['currentValue'] = !$podcastItem->is_mark_as_favorite;
-			$podcastItem->is_mark_as_favorite = !$podcastItem->is_mark_as_favorite; // opposite of current value
-			$podcastItem->save();
+        return response()->json([
+            'status' => 1,
+            'currentValue' => $item->is_mark_as_favorite,
+            'message' => 'This item has been updated',
+        ]);
+    }
 
-			$result['status'] = 1;
-			$result['message'] = 'This item has been updated';
-		}
-		return $result;
-	}
+    public function search(Request $request)
+    {
+        $query = strip_tags($request->input('query', ''));
 
-	/**
-	 * Return a view to display item search results for a given query
-	 */
+        $items = Item::with('podcast')
+            ->where('user_id', Auth::id())
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'LIKE', "%{$query}%")
+                  ->orWhere('description', 'LIKE', "%{$query}%");
+            })
+            ->get();
 
-	public function search() {
-		$query = trim(strip_tags(Request::get('query')));
-		$items = DB::table('items')
-			->where('title', 'LIKE', "%$query%")
-			->orWhere('description', 'LIKE', "%$query%")
-			->get();
-
-		return view('items.searchresults')->with([
-			'items' => $items,
-			'query' => $query,
-		]);
-	}
+        return view('items.searchresults', compact('items', 'query'));
+    }
 }
