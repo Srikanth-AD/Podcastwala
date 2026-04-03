@@ -1,0 +1,6 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css');
+
+body, label, .checkbox label {
+    font-weight: 300;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
